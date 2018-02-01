@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <title>Personal Dashboard</title>
+    <meta charset="utf-8">
+</head>
+<body>
+{% for subreddit in subreddits %}
+    <h1>{{ subreddit.name }}</h1>
+    <div>
+        {% for post in subreddit.posts %}
+            <div>
+                <div>
+                    {{ post.score }}
+                </div>
+                <div>
+                    <a href="{{ post.url }}">
+                        {{ post.title }}
+                    </a>
+                    <div>
+                        <a href="{{ post.comments_url }}">{{ post.number_comments }}</a>
+                        <span>{{ time_ago(post.created) }}</span>
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% for topStory in topStories %}
+    <div>
+        <div>
+            {{ topStory.score }}
+        </div>
+        <div>
+            <a href="{{ topStory.url }}">
+                {{ topStory.title }}
+            </a>
+            <div>
+                <a href="{{ topStory.comments_url }}">{{ topStory.number_comments }}</a>
+                <span>{{ time_ago(topStory.created) }}</span>
+            </div>
+        </div>
+
+    </div>
+{% endfor %}

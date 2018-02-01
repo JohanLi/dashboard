@@ -1,15 +1,17 @@
 from flask import Flask
 from flask import render_template
 from libs import reddit
+from libs import hackernews
 from libs.time_ago import time_ago
 
 app = Flask(__name__)
 
 
 @app.route("/")
-def hello():
+def index():
     return render_template(
-        'reddit.html',
+        'index.html',
         subreddits=reddit.getSubreddits(),
+        topStories=hackernews.getTopStories(),
         time_ago=time_ago,
     )

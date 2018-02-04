@@ -1,22 +1,41 @@
-{% for subreddit in subreddits %}
-    <h1>{{ subreddit.name }}</h1>
-    <div>
-        {% for post in subreddit.posts %}
+<div class="reddit">
+    <div class="subreddits">
+        {% for subreddit in subreddits %}
             <div>
-                <div>
-                    {{ post.score }}
-                </div>
-                <div>
-                    <a href="{{ post.url }}">
-                        {{ post.title }}
-                    </a>
-                    <div>
-                        <a href="{{ post.comments_url }}">{{ post.number_comments }}</a>
-                        <span>{{ time_ago(post.created) }}</span>
-                    </div>
-                </div>
-
+                {{ subreddit.name }}
             </div>
         {% endfor %}
     </div>
-{% endfor %}
+    <div class="posts">
+        {% for subreddit in subreddits %}
+            <div data-subreddit="{{ subreddit.name }}">
+                {% for post in subreddit.posts %}
+                    <div class="post">
+                        <div class="score">
+                            {{ post.score }}
+                        </div>
+                        <div>
+                            <a
+                                class="title"
+                                href="{{ post.url }}"
+                            >
+                                {{ post.title }}
+                            </a>
+                            <div>
+                                <a
+                                    class="comments"
+                                    href="{{ post.comments_url }}"
+                                >
+                                    {{ post.number_comments }} comments
+                                </a>
+                                <span class="time-ago">
+                                    submitted {{ time_ago(post.created) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

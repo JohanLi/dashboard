@@ -26,7 +26,7 @@ def getTopStories():
                 'comments_url': 'https://news.ycombinator.com/item?id=' + str(topStory['id']),
             })
 
-        cache.set('hackernews-topstories', topStories, 900)
+        cache.set('hackernews-topstories', topStories, 7200)
 
     return topStories
 

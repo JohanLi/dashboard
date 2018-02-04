@@ -3,6 +3,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from libs import cache
 import html
+import math
 
 monitoredSubreddits = [
     'programming',
@@ -45,7 +46,7 @@ def getSubreddits():
                 'posts': posts,
             })
 
-        cache.set('reddit-subreddits', subreddits, 900)
+        cache.set('reddit-subreddits', subreddits, 7200)
 
     return subreddits
 
@@ -72,7 +73,7 @@ def getPosts(subreddit):
 
         posts.append({
             'title': html.unescape(data['title']),
-            'score': data['score'],
+            'score': formatScore(data['score']),
             'number_comments': data['num_comments'],
             'created': data['created_utc'],
             'url': data['url'],
@@ -80,3 +81,13 @@ def getPosts(subreddit):
         })
 
     return posts
+
+
+def formatScore(score):
+    k = score / 1000
+
+    if k >= 10:
+        kOneDecimal = math.floor(k * 10) / 10
+        return str(kOneDecimal) + 'k'
+
+    return score

@@ -20,7 +20,7 @@ def getTopStories():
             topStories.append({
                 'title': html.unescape(topStory['title']),
                 'score': topStory['score'],
-                'number_comments': topStory['descendants'],
+                'number_comments': topStory.get('descendants'),
                 'created': topStory['time'],
                 'url': topStory.get('url'),
                 'comments_url': 'https://news.ycombinator.com/item?id=' + str(topStory['id']),

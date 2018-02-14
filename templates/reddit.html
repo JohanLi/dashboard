@@ -29,7 +29,7 @@
                                     {{ post.number_comments }} comments
                                 </a>
                                 <span class="time-ago">
-                                    submitted {{ time_ago(post.created) }}
+                                    submitted {{ post.created|time_ago }}
                                 </span>
                             </div>
                         </div>

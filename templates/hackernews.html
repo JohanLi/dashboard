@@ -9,7 +9,7 @@
             </a>
             <div>
                 <a href="{{ topStory.comments_url }}">{{ topStory.number_comments }}</a>
-                <span>{{ time_ago(topStory.created) }}</span>
+                <span>{{ topStory.created|time_ago }}</span>
             </div>
         </div>
 

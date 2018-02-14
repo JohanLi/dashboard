@@ -13,5 +13,7 @@ def index():
         'index.html',
         subreddits=reddit.getSubreddits(),
         topStories=hackernews.getTopStories(),
-        time_ago=time_ago,
     )
+
+
+app.jinja_env.filters['time_ago'] = time_ago

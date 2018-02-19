@@ -9,10 +9,10 @@
 <body>
     <div class="wrapper">
         <div class="sections">
-            <a href="{{ url_for('reddit') }}" class="{% if section=='reddit' %}active{%endif %}">
+            <a href="{{ url_for('reddit') }}" class="{% if section == 'reddit' %}active{%endif %}">
                 Reddit
             </a>
-            <a href="{{ url_for('hackernews') }}" class="{% if section=='hackernews' %}active{%endif %}">
+            <a href="{{ url_for('hackernews') }}" class="{% if section == 'hackernews' %}active{%endif %}">
                 Hacker News
             </a>
         </div>

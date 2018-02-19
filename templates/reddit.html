@@ -3,7 +3,7 @@
     <div class="reddit">
         <div class="subreddits">
             {% for subreddit in subreddits %}
-                <div>
+                <div class="{% if loop.index == 1 %}active{%endif %}">
                     {{ subreddit.name }}
                 </div>
             {% endfor %}

@@ -3,8 +3,11 @@ from lxml import etree
 from libs import cache
 
 
-def get():
-    weather = cache.get('weather') or []
+def get_weather(bust_cache=False):
+    if bust_cache:
+        weather = []
+    else:
+        weather = cache.get('weather') or []
 
     if not weather:
         response = requests.get(

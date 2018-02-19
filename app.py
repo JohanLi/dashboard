@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
-from libs.reddit import getSubreddits
-from libs.hackernews import getTopStories
+from libs.reddit import get_subreddits
+from libs.hackernews import get_top_stories
 from libs.filters.time_ago import time_ago
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app = Flask(__name__)
 def reddit():
     return render_template(
         'reddit.html',
-        subreddits=getSubreddits(),
+        subreddits=get_subreddits(),
         section='reddit',
     )
 
@@ -20,7 +20,7 @@ def reddit():
 def hackernews():
     return render_template(
         'hackernews.html',
-        topStories=getTopStories(),
+        top_stories=get_top_stories(),
         section='hackernews',
     )
 

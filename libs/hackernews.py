@@ -3,35 +3,38 @@ import html
 from libs import cache
 
 
-def getTopStories():
-    topStories = cache.get('hackernews-topstories') or []
+def get_top_stories(bust_cache=False):
+    if bust_cache:
+        top_stories = []
+    else:
+        top_stories = cache.get('hackernews-topstories') or []
 
-    if not topStories:
-        for topStoryId in getTopStoryIds()[:20]:
+    if not top_stories:
+        for top_story_id in get_top_story_ids()[:20]:
             response = requests.get(
-                'https://hacker-news.firebaseio.com/v0/item/' + str(topStoryId) + '.json',
+                'https://hacker-news.firebaseio.com/v0/item/' + str(top_story_id) + '.json',
                 headers={
                     'user-agent': 'johanli.com',
                 },
             )
 
-            topStory = response.json()
+            top_story = response.json()
 
-            topStories.append({
-                'title': html.unescape(topStory['title']),
-                'score': topStory['score'],
-                'number_comments': topStory.get('descendants'),
-                'created': topStory['time'],
-                'url': topStory.get('url'),
-                'comments_url': 'https://news.ycombinator.com/item?id=' + str(topStory['id']),
+            top_stories.append({
+                'title': html.unescape(top_story['title']),
+                'score': top_story['score'],
+                'number_comments': top_story.get('descendants'),
+                'created': top_story['time'],
+                'url': top_story.get('url'),
+                'comments_url': 'https://news.ycombinator.com/item?id=' + str(top_story['id']),
             })
 
-        cache.set('hackernews-topstories', topStories, 7200)
+        cache.set('hackernews-topstories', top_stories, 7200)
 
-    return topStories
+    return top_stories
 
 
-def getTopStoryIds():
+def get_top_story_ids():
     response = requests.get(
         'https://hacker-news.firebaseio.com/v0/topstories.json',
         headers={

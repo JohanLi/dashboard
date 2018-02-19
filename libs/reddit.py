@@ -5,7 +5,7 @@ from libs import cache
 import html
 import math
 
-monitoredSubreddits = [
+monitored_subreddits = [
     'programming',
     'startups',
     'technology',
@@ -15,10 +15,10 @@ monitoredSubreddits = [
 ]
 
 
-def accessToken():
-    accessToken = cache.get('reddit-access-token')
+def access_token():
+    access_token = cache.get('reddit-access-token')
 
-    if not accessToken:
+    if not access_token:
         response = requests.post(
             'https://www.reddit.com/api/v1/access_token',
             auth=HTTPBasicAuth(
@@ -29,18 +29,21 @@ def accessToken():
             data={'grant_type': 'client_credentials'},
         )
 
-        accessToken = response.json()['access_token']
-        cache.set('reddit-access-token', accessToken, 3000)
+        access_token = response.json()['access_token']
+        cache.set('reddit-access-token', access_token, 3000)
 
-    return accessToken
+    return access_token
 
 
-def getSubreddits():
-    subreddits = cache.get('reddit-subreddits') or []
+def get_subreddits(bust_cache=False):
+    if bust_cache:
+        subreddits = []
+    else:
+        subreddits = cache.get('reddit-subreddits') or []
 
     if not subreddits:
-        for subreddit in monitoredSubreddits:
-            posts = getPosts(subreddit)
+        for subreddit in monitored_subreddits:
+            posts = get_posts(subreddit)
             subreddits.append({
                 'name': subreddit,
                 'posts': posts,
@@ -51,12 +54,12 @@ def getSubreddits():
     return subreddits
 
 
-def getPosts(subreddit):
+def get_posts(subreddit):
     response = requests.get(
         'https://oauth.reddit.com/r/' + subreddit + '/hot/.json',
         headers={
             'user-agent': 'johanli.com',
-            'Authorization': 'bearer ' + accessToken(),
+            'Authorization': 'bearer ' + access_token(),
         },
         params={
             'limit': 10,
@@ -73,7 +76,7 @@ def getPosts(subreddit):
 
         posts.append({
             'title': html.unescape(data['title']),
-            'score': formatScore(data['score']),
+            'score': format_score(data['score']),
             'number_comments': data['num_comments'],
             'created': data['created_utc'],
             'url': data['url'],
@@ -83,11 +86,11 @@ def getPosts(subreddit):
     return posts
 
 
-def formatScore(score):
+def format_score(score):
     k = score / 1000
 
     if k >= 10:
-        kOneDecimal = math.floor(k * 10) / 10
-        return str(kOneDecimal) + 'k'
+        k_one_decimal = math.floor(k * 10) / 10
+        return str(k_one_decimal) + 'k'
 
     return score

@@ -1,27 +1,27 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="hackernews">
-        {% for topStory in topStories %}
+        {% for top_story in top_stories %}
             <div class="hackernews-post">
                 <div class="score">
-                    {{ topStory.score }}
+                    {{ top_story.score }}
                 </div>
                 <div>
                     <a
                         class="title"
-                        href="{{ topStory.url }}"
+                        href="{{ top_story.url }}"
                     >
-                        {{ topStory.title }}
+                        {{ top_story.title }}
                     </a>
                     <div>
                         <a
                             class="comments"
-                            href="{{ topStory.comments_url }}"
+                            href="{{ top_story.comments_url }}"
                         >
-                            {{ topStory.number_comments }} comments
+                            {{ top_story.number_comments }} comments
                         </a>
                         <span class="time-ago">
-                            submitted {{ topStory.created|time_ago }}
+                            submitted {{ top_story.created|time_ago }}
                         </span>
                     </div>
                 </div>

@@ -1,41 +1,44 @@
-<div class="reddit">
-    <div class="subreddits">
-        {% for subreddit in subreddits %}
-            <div>
-                {{ subreddit.name }}
-            </div>
-        {% endfor %}
-    </div>
-    <div class="posts">
-        {% for subreddit in subreddits %}
-            <div data-subreddit="{{ subreddit.name }}">
-                {% for post in subreddit.posts %}
-                    <div class="post">
-                        <div class="score">
-                            {{ post.score }}
-                        </div>
-                        <div>
-                            <a
-                                class="title"
-                                href="{{ post.url }}"
-                            >
-                                {{ post.title }}
-                            </a>
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="reddit">
+        <div class="subreddits">
+            {% for subreddit in subreddits %}
+                <div>
+                    {{ subreddit.name }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="reddit-posts">
+            {% for subreddit in subreddits %}
+                <div data-subreddit="{{ subreddit.name }}">
+                    {% for post in subreddit.posts %}
+                        <div class="reddit-post">
+                            <div class="score">
+                                {{ post.score }}
+                            </div>
                             <div>
                                 <a
-                                    class="comments"
-                                    href="{{ post.comments_url }}"
+                                    class="title"
+                                    href="{{ post.url }}"
                                 >
-                                    {{ post.number_comments }} comments
+                                    {{ post.title }}
                                 </a>
-                                <span class="time-ago">
-                                    submitted {{ post.created|time_ago }}
-                                </span>
+                                <div>
+                                    <a
+                                        class="comments"
+                                        href="{{ post.comments_url }}"
+                                    >
+                                        {{ post.number_comments }} comments
+                                    </a>
+                                    <span class="time-ago">
+                                        submitted {{ post.created|time_ago }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
+{% endblock %}

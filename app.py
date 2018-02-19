@@ -1,18 +1,27 @@
 from flask import Flask
 from flask import render_template
-from libs import reddit
-from libs import hackernews
-from libs.time_ago import time_ago
+from libs.reddit import getSubreddits
+from libs.hackernews import getTopStories
+from libs.filters.time_ago import time_ago
 
 app = Flask(__name__)
 
 
 @app.route("/")
-def index():
+def reddit():
     return render_template(
-        'index.html',
-        subreddits=reddit.getSubreddits(),
-        topStories=hackernews.getTopStories(),
+        'reddit.html',
+        subreddits=getSubreddits(),
+        section='reddit',
+    )
+
+
+@app.route("/hackernews")
+def hackernews():
+    return render_template(
+        'hackernews.html',
+        topStories=getTopStories(),
+        section='hackernews',
     )
 
 

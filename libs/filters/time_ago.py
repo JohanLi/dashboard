@@ -1,6 +1,7 @@
 import time
 import math
 
+
 def time_ago(date):
     seconds = time.time() - date
 

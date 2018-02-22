@@ -48,14 +48,14 @@ body {
     flex-shrink: 0;
 }
 
-.subreddits > div {
+.subreddit {
     padding: 10px 20px;
     text-align: right;
     cursor: pointer;
     color: #999;
 }
 
-.subreddits > div.active {
+.subreddit.active {
     color: #000;
 }
 

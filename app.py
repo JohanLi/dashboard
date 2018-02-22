@@ -1,4 +1,3 @@
-import settings
 from flask import Flask
 from flask import render_template
 from libs.reddit import get_subreddits

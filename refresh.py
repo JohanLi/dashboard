@@ -1,3 +1,4 @@
+import settings
 from libs.reddit import get_subreddits
 from libs.hackernews import get_top_stories
 from libs.weather import get_weather

@@ -11,21 +11,19 @@
     - python3-venv
     - nginx
     - redis-server
+    - git
 
   - name: deploy master branch
-    git: repo=https://github.com/JohanLi/personal-dashboard.git dest=/var/www/{{ domain }}
+    git: repo=https://github.com/JohanLi/dashboard.git dest=/var/www/{{ domain }}
+
+  - name: deploy .env file
+    copy: src=../../.env dest=/var/www/{{ domain }}/.env
 
   - name: set up virtualenv and install dependencies
     pip: requirements=/var/www/{{ domain }}/requirements.txt virtualenv=/var/www/{{ domain }}/venv virtualenv_command="/usr/bin/python3 -m venv"
 
-  - name: add environment variables to virtualenv
-    lineinfile:
-      path: /var/www/{{ domain }}/venv/bin/activate
-      line: "export {{ item }}"
-    with_lines: cat ../../.env
-
   - name: delete default server block
-    file: path=/etc/nginx/sites-available/default state=absent
+    file: path=/etc/nginx/sites-enabled/default state=absent
 
   - name: add server block
     template: src=../templates/server-block.conf dest=/etc/nginx/conf.d/{{ domain }}.conf
@@ -33,7 +31,7 @@
   - name: reload nginx
     service: name=nginx enabled=yes state=reloaded
 
-  - name: run gunicorn on a virtualenv
+  - name: run gunicorn on virtualenv
     gunicorn: app=app:app chdir=/var/www/{{ domain }} conf=/var/www/{{ domain }}/gunicorn.cfg venv=/var/www/{{ domain }}/venv
 
   - name: start application on reboot

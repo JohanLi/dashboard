@@ -3,7 +3,7 @@
 
   tasks:
 
-  - name: install nodejs, git, nginx
+  - name: install python, nginx, redis, git and certbot
     apt: name={{ item }} state=latest update_cache=yes
     with_items:
     - python3
@@ -12,6 +12,7 @@
     - nginx
     - redis-server
     - git
+    - certbot
 
   - name: deploy master branch
     git: repo=https://github.com/JohanLi/dashboard.git dest=/var/www/{{ domain }}
@@ -22,15 +23,6 @@
   - name: set up virtualenv and install dependencies
     pip: requirements=/var/www/{{ domain }}/requirements.txt virtualenv=/var/www/{{ domain }}/venv virtualenv_command="/usr/bin/python3 -m venv"
 
-  - name: delete default server block
-    file: path=/etc/nginx/sites-enabled/default state=absent
-
-  - name: add server block
-    template: src=../templates/server-block.conf dest=/etc/nginx/conf.d/{{ domain }}.conf
-
-  - name: reload nginx
-    service: name=nginx enabled=yes state=reloaded
-
   - name: run gunicorn on virtualenv
     gunicorn: app=app:app chdir=/var/www/{{ domain }} conf=/var/www/{{ domain }}/gunicorn.cfg venv=/var/www/{{ domain }}/venv
 
@@ -39,3 +31,18 @@
 
   - name: refresh cache every 15 minutes
     cron: minute=03,18,33,48 job=". /var/www/{{ domain }}/venv/bin/activate && cd /var/www/{{ domain }} && python3 refresh.py"
+
+  - name: setup let's encrypt certificate
+    command: certbot certonly --standalone --noninteractive --agree-tos --email johan@johanli.com -d {{ domain }} --pre-hook "service nginx stop" --post-hook "service nginx start"
+
+  - name: verify that renewal works
+    command: certbot renew --dry-run
+
+  - name: delete default server block
+    file: path=/etc/nginx/sites-enabled/default state=absent
+
+  - name: add server block
+    template: src=../templates/server-block.conf dest=/etc/nginx/conf.d/{{ domain }}.conf
+
+  - name: reload nginx
+    service: name=nginx enabled=yes state=reloaded

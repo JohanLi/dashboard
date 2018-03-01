@@ -16,6 +16,9 @@
             <a href="{{ url_for('hackernews') }}" class="{% if section == 'hackernews' %}active{%endif %}">
                 Hacker News
             </a>
+            <a href="{{ url_for('misc') }}" class="{% if section == 'misc' %}active{%endif %}">
+                Misc
+            </a>
         </div>
         <div class="content">
             {% block content %}{% endblock %}

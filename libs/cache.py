@@ -14,7 +14,7 @@ def get(key):
 
 
 def set(key, value, duration):
-    if is_list(value):
+    if is_list_or_dict(value):
         value = json.dumps(value)
 
     if duration:
@@ -31,5 +31,5 @@ def is_json(value):
     return True
 
 
-def is_list(value):
-    return type(value) is list
+def is_list_or_dict(value):
+    return type(value) in [list, dict]

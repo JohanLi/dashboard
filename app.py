@@ -26,4 +26,12 @@ def hackernews():
     )
 
 
+@app.route("/misc")
+def misc():
+    return render_template(
+        'misc.html',
+        section='misc',
+    )
+
+
 app.jinja_env.filters['time_ago'] = time_ago

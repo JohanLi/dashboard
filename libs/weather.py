@@ -34,7 +34,7 @@ def get_weather(bust_cache=False):
             'set': sun.get('set'),
         }
 
-        for time_element in forecast_xml.xpath('forecast/tabular/time')[:24]:
+        for time_element in forecast_xml.xpath('forecast/tabular/time')[:28]:
             weather['forecast'].append({
                 'time': time_element.get('from'),
                 'description': time_element.find('symbol').get('name'),
@@ -79,7 +79,7 @@ def forecast():
         formatted_forecast[name].append({
             'description': forecast['description'],
             'temperature': forecast['temperature'],
-            'hour': datetime_object.hour,
+            'hour': datetime_object.strftime('%H:%M'),
             'icon': get_icon(forecast, weather['sun']),
         })
 

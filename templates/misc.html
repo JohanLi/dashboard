@@ -1,6 +1,32 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="misc">
-        Misc
+        <h1>Weather</h1>
+        <div class="weather">
+            {% for name, periods in forecast.items() %}
+                <div class="day">
+                    <div class="periods">
+                        {% for period in periods %}
+                            <div class="period">
+                                <img
+                                    class="icon"
+                                    src="{{ url_for('static', filename='img/weather/' + period.icon + '.svg') }}"
+                                    title="{{ period.description }}"
+                                >
+                                <div class="temperature">
+                                    {{ period.temperature }}°
+                                </div>
+                                <div class="hour">
+                                    {{ period.hour }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="name">
+                        {{ name }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

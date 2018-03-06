@@ -6,3 +6,6 @@ start:
 
 setup:
 	ansible-playbook -i ansible/hosts ansible/tasks/setup.yml
+
+deploy:
+	ansible-playbook -i ansible/hosts ansible/tasks/deploy.yml

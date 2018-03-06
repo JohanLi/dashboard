@@ -1,0 +1,12 @@
+---
+- hosts: webserver
+
+  tasks:
+
+  - name: deploy master branch
+    git: repo=https://github.com/JohanLi/dashboard.git dest=/var/www/{{ domain }} force=yes
+
+  - name: reload gunicorn processes
+    shell: ps aux |grep gunicorn |grep dashboard | awk '{ print $2 }' |xargs kill -HUP
+    register: diff_cmd
+    failed_when: diff_cmd.rc != -1

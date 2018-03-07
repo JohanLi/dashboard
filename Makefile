@@ -9,3 +9,7 @@ setup:
 
 deploy:
 	ansible-playbook -i ansible/hosts ansible/tasks/deploy.yml
+
+.PHONY: test
+test:
+	python3 -m unittest -v

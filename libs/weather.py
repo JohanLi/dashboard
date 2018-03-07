@@ -71,22 +71,22 @@ def forecast():
         datetime_object = datetime.strptime(forecast['time'], '%Y-%m-%dT%H:%M:%S')
         datetime_object_utc = datetime_object + timedelta(hours=1) # yr.no returns local timestamps, not utc
 
-        name = datetime_to_name(datetime_object_utc)
+        day = datetime_to_day(datetime_object_utc)
 
-        if name not in formatted_forecast:
-            formatted_forecast[name] = []
+        if day not in formatted_forecast:
+            formatted_forecast[day] = []
 
-        formatted_forecast[name].append({
+        formatted_forecast[day].append({
             'description': forecast['description'],
             'temperature': forecast['temperature'],
             'hour': datetime_object.strftime('%H:%M'),
             'icon': get_icon(forecast, weather['sun']),
         })
 
-    return formatted_forecast
+    return shorten_forecast_after_tomorrow(formatted_forecast)
 
 
-def datetime_to_name(datetime_object):
+def datetime_to_day(datetime_object):
     if datetime.utcnow().date() == datetime_object.date():
         return 'Today'
     elif datetime.utcnow().date() + timedelta(days=1) == datetime_object.date():
@@ -130,3 +130,17 @@ def icon_has_day_night(name):
         'snow-and-thunder',
         'snow',
     ]
+
+
+def shorten_forecast_after_tomorrow(formatted_forecast):
+    for day, forecast in formatted_forecast.items():
+        if day in ['Today', 'Tomorrow']:
+            continue
+
+        if len(forecast) < 4:
+            del formatted_forecast[day]
+            continue
+
+        formatted_forecast[day] = [forecast[2]]
+
+    return formatted_forecast

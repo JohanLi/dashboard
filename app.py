@@ -4,6 +4,7 @@ from flask import render_template
 from libs.reddit import get_subreddits
 from libs.hackernews import get_top_stories
 from libs.weather import forecast
+from libs.plants import plants
 from libs.filters.time_ago import time_ago
 
 app = Flask(__name__)
@@ -32,6 +33,7 @@ def misc():
     return render_template(
         'misc.html',
         forecast=forecast(),
+        plants=plants(),
         section='misc',
     )
 

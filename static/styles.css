@@ -160,3 +160,45 @@ body {
 .name {
     margin-top: 20px;
 }
+
+.misc h2 {
+    margin-top: 30px;
+}
+
+.misc h2:first-child {
+    margin-top: 10px;
+}
+
+.plants-name {
+    text-align: left;
+    width: 300px;
+    padding-bottom: 10px;
+}
+
+.plants-watering {
+    text-align: left;
+    width: 200px;
+    padding-bottom: 10px;
+}
+
+.plants-water {
+    color: #fff;
+    background: #007bff;
+    border: 0;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.plants-water:focus {
+    outline: 0;
+    box-shadow: 0 0 0 4px #80BDFE;
+}
+
+.plants-water:active, .plants-water:hover {
+    background: #0062cc;
+}
+
+.plants th, .plants td {
+    height: 40px;
+}

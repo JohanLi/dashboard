@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="misc">
-        <h1>Weather</h1>
+        <h2>Weather</h2>
         <div class="weather">
             {% for name, periods in forecast.items() %}
                 <div class="day">
@@ -28,5 +28,30 @@
                 </div>
             {% endfor %}
         </div>
+        <h2>Plants</h2>
+        <table class="plants">
+            <thead>
+                <tr>
+                    <th class="plants-name">Name</th>
+                    <th class="plants-watering">Last watered</th>
+                    <th class="plants-watering"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plant in plants %}
+                <tr>
+                    <td>{{ plant.name }}</td>
+                    <td>{{ plant.last_watered|time_ago }}</td>
+                    <td>
+                        {% if plant.needs_watering %}
+                            <button type="button" class="plants-water">
+                                Water
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

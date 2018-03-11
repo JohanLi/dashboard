@@ -41,10 +41,16 @@
                 {% for plant in plants %}
                 <tr>
                     <td>{{ plant.name }}</td>
-                    <td>{{ plant.last_watered|time_ago }}</td>
+                    <td>
+                        {% if plant.last_watered %}
+                            {{ plant.last_watered|time_ago }}
+                        {% else %}
+                            Unknown
+                        {% endif %}
+                    </td>
                     <td>
                         {% if plant.needs_watering %}
-                            <button type="button" class="plants-water">
+                            <button type="button" class="plants-water" data-id="{{ loop.index0 }}">
                                 Water
                             </button>
                         {% endif %}

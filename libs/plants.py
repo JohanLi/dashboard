@@ -1,14 +1,43 @@
-from datetime import datetime, timedelta
-from time import mktime
+from time import time
+from libs import cache
+
+default_plants = [
+    {
+        'name': 'Areca palm',
+        'watering_frequency': 3,
+    },
+    {
+        'name': 'Ficus microcarpa',
+        'watering_frequency': 3,
+    },
+    {
+        'name': 'Dracaena Marginata',
+        'watering_frequency': 7,
+    },
+    {
+        'name': 'White Orchid',
+        'watering_frequency': 7,
+    },
+    {
+        'name': 'Clusia',
+        'watering_frequency': 7,
+    },
+]
 
 
-def plants():
-    return [needs_watering(plant) for plant in plants_mock()]
+def get_plants():
+    plants = cache.get('plants')
+
+    if not plants:
+        plants = default_plants
+        cache.set('plants', plants)
+
+    return [needs_watering(plant) for plant in plants]
 
 
 def needs_watering(plant):
-    unix_now = mktime(datetime.utcnow().timetuple())
-    unix_needs_watering = 86400 * plant['watering_frequency'] + plant['last_watered']
+    unix_now = time()
+    unix_needs_watering = 86400 * plant['watering_frequency'] + plant.get('last_watered', 0)
     margin = 7200
 
     if unix_now + margin >= unix_needs_watering:
@@ -19,31 +48,7 @@ def needs_watering(plant):
     return plant
 
 
-def plants_mock():
-    return [
-        {
-            'name': 'Areca palm',
-            'watering_frequency': 3,
-            'last_watered': mktime((datetime.utcnow() - timedelta(days=1)).timetuple())
-        },
-        {
-            'name': 'Ficus microcarpa',
-            'watering_frequency': 3,
-            'last_watered': mktime((datetime.utcnow() - timedelta(days=2)).timetuple())
-        },
-        {
-            'name': 'Dracaena Marginata',
-            'watering_frequency': 7,
-            'last_watered': mktime((datetime.utcnow() - timedelta(days=9)).timetuple())
-        },
-        {
-            'name': 'White Orchid',
-            'watering_frequency': 7,
-            'last_watered': mktime((datetime.utcnow() - timedelta(days=5)).timetuple())
-        },
-        {
-            'name': 'Clusia',
-            'watering_frequency': 7,
-            'last_watered': mktime((datetime.utcnow() - timedelta(days=2)).timetuple())
-        },
-    ]
+def water(id):
+    plants = get_plants()
+    plants[id]['last_watered'] = time()
+    cache.set('plants', plants)

@@ -13,12 +13,12 @@ def get(key):
     return value
 
 
-def set(key, value, duration):
+def set(key, value, expire=None):
     if is_list_or_dict(value):
         value = json.dumps(value)
 
-    if duration:
-        return r.set(key, value, ex=duration)
+    if expire:
+        return r.set(key, value, ex=expire)
     else:
         return r.set(key, value)
 

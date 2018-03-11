@@ -1,7 +1,6 @@
 import unittest
 from freezegun import freeze_time
-from datetime import datetime
-from time import mktime
+from datetime import datetime, timezone
 from libs.plants import needs_watering
 
 
@@ -11,7 +10,7 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(
             needs_watering({
                 'watering_frequency': 4,
-                'last_watered': mktime(datetime(2018, 3, 7, 9, 37, 10).timetuple())
+                'last_watered': datetime(2018, 3, 7, 9, 37, 10).replace(tzinfo=timezone.utc).timestamp()
             })['needs_watering'],
             False
         )
@@ -19,7 +18,7 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(
             needs_watering({
                 'watering_frequency': 8,
-                'last_watered': mktime(datetime(2018, 3, 1, 8, 55, 1).timetuple())
+                'last_watered': datetime(2018, 3, 1, 8, 55, 1).replace(tzinfo=timezone.utc).timestamp()
             })['needs_watering'],
             True
         )
@@ -28,7 +27,7 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(
             needs_watering({
                 'watering_frequency': 3,
-                'last_watered': mktime(datetime(2018, 3, 7, 17, 17, 35).timetuple())
+                'last_watered': datetime(2018, 3, 7, 17, 17, 35).replace(tzinfo=timezone.utc).timestamp()
             })['needs_watering'],
             False
         )
@@ -36,7 +35,7 @@ class TestWeather(unittest.TestCase):
         self.assertEqual(
             needs_watering({
                 'watering_frequency': 3,
-                'last_watered': mktime(datetime(2018, 3, 7, 17, 17, 34).timetuple())
+                'last_watered': datetime(2018, 3, 7, 17, 17, 34).replace(tzinfo=timezone.utc).timestamp()
             })['needs_watering'],
             True
         )

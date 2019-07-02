@@ -4,33 +4,57 @@
   tasks:
 
   - name: install python, nginx, redis, git and certbot
-    apt: name={{ item }} state=latest update_cache=yes
-    with_items:
-    - python3
-    - python3-pip
-    - python3-venv
-    - nginx
-    - redis-server
-    - git
-    - certbot
+    apt:
+      name: "{{ packages }}"
+      state: latest
+      update_cache: yes
+      force_apt_get: yes
+    vars:
+      packages:
+        - python3
+        - python3-pip
+        - python3-venv
+        - python-setuptools
+#        - nginx
+#        - redis-server
+#        - git
+#        - certbot
 
   - name: deploy master branch
-    git: repo=https://github.com/JohanLi/dashboard.git dest=/var/www/{{ domain }}
+    git:
+      repo: https://github.com/JohanLi/dashboard.git
+      dest: /var/www/{{ domain }}
+      force: yes
 
   - name: deploy .env file
-    copy: src=../../.env dest=/var/www/{{ domain }}/.env
+    copy:
+      src: ../../.env
+      dest: /var/www/{{ domain }}/.env
 
   - name: set up virtualenv and install dependencies
-    pip: requirements=/var/www/{{ domain }}/requirements.txt virtualenv=/var/www/{{ domain }}/venv virtualenv_command="/usr/bin/python3 -m venv"
+    pip:
+      requirements: /var/www/{{ domain }}/requirements.txt
+      virtualenv: /var/www/{{ domain }}/venv
+      virtualenv_command: "/usr/bin/python3 -m venv"
 
   - name: run gunicorn on virtualenv
-    gunicorn: app=app:app chdir=/var/www/{{ domain }} conf=/var/www/{{ domain }}/gunicorn.cfg venv=/var/www/{{ domain }}/venv
+    gunicorn:
+      app: app:app
+      chdir: /var/www/{{ domain }}
+      conf: /var/www/{{ domain }}/gunicorn.cfg
+      venv: /var/www/{{ domain }}/venv
 
   - name: start application on reboot
-    cron: special_time=reboot job=". /var/www/{{ domain }}/venv/bin/activate && cd /var/www/{{ domain }} && gunicorn app:app -c /var/www/{{ domain }}/gunicorn.cfg"
+    cron:
+      name: start dashboard
+      special_time: reboot
+      job: ". /var/www/{{ domain }}/venv/bin/activate && cd /var/www/{{ domain }} && gunicorn app:app -c /var/www/{{ domain }}/gunicorn.cfg"
 
   - name: refresh cache every 15 minutes
-    cron: minute=03,18,33,48 job=". /var/www/{{ domain }}/venv/bin/activate && cd /var/www/{{ domain }} && python3 refresh.py"
+    cron:
+      name: refresh dashboard cache
+      minute: 03,18,33,48
+      job: ". /var/www/{{ domain }}/venv/bin/activate && cd /var/www/{{ domain }} && python3 refresh.py"
 
   - name: setup let's encrypt certificate
     command: certbot certonly --standalone --noninteractive --agree-tos --email johan@johanli.com -d {{ domain }} --pre-hook "service nginx stop" --post-hook "service nginx start"
@@ -39,10 +63,17 @@
     command: certbot renew --dry-run
 
   - name: delete default server block
-    file: path=/etc/nginx/sites-enabled/default state=absent
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent
 
   - name: add server block
-    template: src=../templates/server-block.conf dest=/etc/nginx/conf.d/{{ domain }}.conf
+    template:
+      src: ../templates/server-block.conf
+      dest: /etc/nginx/conf.d/{{ domain }}.conf
 
   - name: reload nginx
-    service: name=nginx enabled=yes state=reloaded
+    service:
+      name: nginx
+      enabled: yes
+      state: reloaded
